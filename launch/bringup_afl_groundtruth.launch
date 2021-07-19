@@ -1,0 +1,8 @@
+<launch>
+    <include file="$(find aflctrl2)/launch/bringup_aflctrl.launch"/>
+    <include file="$(find afl_local_planner)/launch/teb_local_planner.launch"/>
+    <include file="$(find afl_fork_control)/launch/bringup_forkctrl.launch"/>
+
+    <node pkg="reconfigure_client" name ="setBackwardMode_server_client" type="Backward_Mode.py"/>
+    <node pkg="reconfigure_client" name ="BehaviorParamHandler" type="behavior_param_reconfigure_client.py"/>
+</launch>

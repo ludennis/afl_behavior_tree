@@ -1,0 +1,43 @@
+behavior_tree:
+  move2RP:
+    # RP_x: 0.3 #-0.25
+    # RP_y: 2.58
+    # RP_z: 0.0
+    # RP_rx: 0.0
+    # RP_ry: 0.0
+    # RP_rz: 0.0
+    # RP_rw: 1.0
+    goal_completion_timeout: 120.0 #(sec)
+
+  move2goal:
+    detected_object_topic: "/detected_object_front"
+    Covariance_threshold: 30.0
+    goal_completion_timeout: 120.0 # (sec)
+    pos_osci_threshold: 0.3 
+    ori_osci_threshold: 0.05
+    pallet_height: 0.83 #(m)
+
+  move2height:
+    goal_completion_timeout: 30.0 # (sec)
+    height_offset: 0 # (mm)
+
+  forkhigher:
+    goal_completion_timeout: 30.0 # (sec)
+    higher_distance: 100.0 #(mm)
+
+  forkdown:
+    goal_completion_timeout: 30.0 # (sec)
+
+  moveforward:
+    detected_object_topic: "/detected_object_back"
+    Covariance_threshold: 30.0
+    goal_completion_timeout: 120.0 # (sec)
+
+  movebackward:
+    detected_object_topic: "/detected_object_front"
+    Covariance_threshold: 30.0
+    goal_completion_timeout: 20.0 # (sec)
+
+
+fork_insertion_controller:
+  ackermann_speed: 0.15

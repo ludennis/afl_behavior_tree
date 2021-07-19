@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="afl_behavior_tree" name="afl_behavior_tree" type="afl_behavior_tree" output="screen">
+        <param name="treeConfigPath" value="$(find afl_behavior_tree)/config/afl_tree.xml"/>
+        <rosparam command="load" file="$(find afl_behavior_tree)/config/BT_parameter.yaml"/>
+    </node>
+</launch>

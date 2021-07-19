@@ -1,0 +1,26 @@
+ <root main_tree_to_execute = "AFL_BT" >
+     <BehaviorTree ID="AFL_BT">
+        <Sequence name="root_sequence">
+            <Move2RP   name="Move2RP" ReadyPoint="0.3;2.58;0"/> <!-- ReadyPoint:x,y,yaw -->
+            <!-- <NormalDetection name="Start Detection"/> -->
+            <Move2Goal   name="Move2Goal" Pose="{targetPose}"/>
+            <!-- ***********lift up behavior sequence********************* -->
+            <Sequence name="Liftup">
+                <Move2Height name="Move2Height" message="{targetPose}"/>
+                <MoveForward name="MoveForward" message="{targetPose}"/>
+                <ForkHigher  name="ForkHigher" message="{targetPose}"/>
+                <MoveBackward name="MoveBackward" message="{targetPose}"/>
+                <ForkDown name="ForkDown" Height="250"/>
+            </Sequence>
+            <!-- ********************************************************* -->
+            <!-- <SetBlackboard  output_key="lay_height" value="250" />
+            <SetBlackboard  output_key="goal_pose" value="0.3;2.58;0" />
+            <SetBlackboard  output_key="standby_pose" value="-1.0;2.58;0" /> -->
+            <!-- ReadyPoint:x,y,yaw -->
+            <!-- <Move2RP   name="Move2RP" ReadyPoint="{goal_pose}"/> 
+            <ForkDown name="ForkDown" Height="{lay_height}"/>
+            <ForkLower name="ForkLower" Height="{lay_height}"/>
+            <Move2RP   name="Move2RP" ReadyPoint="{standby_pose}"/> -->
+        </Sequence>
+     </BehaviorTree>
+ </root>
