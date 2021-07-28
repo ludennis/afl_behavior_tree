@@ -1,5 +1,6 @@
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include "afl_behavior.h"
+#include <moveToReadyPoint.h>
 
 using namespace AFL;
 using namespace BT;
@@ -9,7 +10,7 @@ int main(int argc, char** argv)
   BehaviorTreeFactory factory;
   ros::init(argc, argv, "afl_behavior_tree");
 
-  factory.registerNodeType<Move2RP>("Move2RP");
+  factory.registerNodeType<MoveToReadyPoint>("MoveToReadyPoint");
   // factory.registerNodeType<NormalDetection>("NormalDetection");
   factory.registerNodeType<Move2Goal>("Move2Goal");
   factory.registerNodeType<Move2Height>("Move2Height");

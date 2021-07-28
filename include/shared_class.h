@@ -2,6 +2,9 @@
 *****This cpp file defined the interfaces for behavior node*****
 ***************************************************************/
 
+#ifndef _SHARED_CLASS_H_
+#define _SHARED_CLASS_H_
+
 #include <iostream>
 #include <stdlib.h>
 #include <cmath>
@@ -111,3 +114,5 @@ namespace AFL
       actionlib::SimpleActionClient<afl_fork_control::setForkAction> ac;
   };
 }
+
+#endif // _SHARED_CLASS_H_

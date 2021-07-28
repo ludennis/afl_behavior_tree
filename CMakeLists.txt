@@ -21,7 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package()
 
 include_directories(
-  include/${PROJECT_NAME}
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -30,6 +30,7 @@ add_executable(${PROJECT_NAME}
   src/afl_behavior.cpp
   src/shared_class.cpp
   src/fork_insertion_controller.cpp
+  src/moveToReadyPoint.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

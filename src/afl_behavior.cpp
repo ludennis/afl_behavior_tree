@@ -2,49 +2,6 @@
 
 namespace AFL
 {
-  Move2RP::Move2RP(const std::string& name, const NodeConfiguration& config)
-  : Navigation(name, config)
-  {}
-
-  BT::PortsList Move2RP::providedPorts()
-  {
-    return { InputPort<Pose2D>("ReadyPoint") };
-  }
-
-  BT::NodeStatus Move2RP::tick()
-  {
-    publishBehaviorState();
-    ros::param::get("~behavior_tree/move2RP/goal_completion_timeout", this->duration);
-    ROS_INFO_STREAM_NAMED("AFL","[afl_behavior_tree] Behavior: "
-        << this->name() << " actionNode initializing") ;
-
-    move_base_msgs::MoveBaseGoal goal;
-    auto RP_pose = getInput<Pose2D>("ReadyPoint");
-    if (!RP_pose)
-    {
-      throw BT::RuntimeError("missing required input [message]: ", RP_pose.error());
-    }
-
-    goal.target_pose.header.frame_id = "map";
-    goal.target_pose.pose = Pose_theta2quaternion(RP_pose.value());
-
-    sendGoal(goal);
-    return isBehaviorFinished();
-  }
-
-  geometry_msgs::Pose Move2RP::Pose_theta2quaternion(Pose2D pose)
-  {
-    tf2::Quaternion q;
-    geometry_msgs::Pose output;
-    output.position.x  = pose.x;
-    output.position.y  = pose.y;
-    std::cout << "Pose: "<< pose.y << std::endl;
-    q.setRPY(0, 0, pose.theta);
-    tf2::convert(q, output.orientation);
-
-    return output;
-  }
-
   Move2Goal::Move2Goal(const std::string& name, const NodeConfiguration& config) :
     Navigation(name, config)
   {

@@ -1,18 +1,10 @@
+#ifndef _AFL_BEHAVIOR_H_
+#define _AFL_BEHAVIOR_H_
+
 #include "shared_class.h"
 
 namespace AFL
 {
-  class Move2RP : public Navigation
-  {
-    public:
-      Move2RP(const std::string& name, const NodeConfiguration& config);
-      static BT::PortsList providedPorts();
-      BT::NodeStatus tick() override;
-
-    private:
-      geometry_msgs::Pose Pose_theta2quaternion(Pose2D pose);
-  };
-
   class Move2Goal : public Navigation
   {
     public:
@@ -106,3 +98,5 @@ namespace AFL
       ros::NodeHandle n;
   };
 }
+
+#endif // _AFL_BEHAVIOR_

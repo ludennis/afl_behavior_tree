@@ -1,5 +1,5 @@
 behavior_tree:
-  move2RP:
+  moveToReadyPoint:
     # RP_x: 0.3 #-0.25
     # RP_y: 2.58
     # RP_z: 0.0
