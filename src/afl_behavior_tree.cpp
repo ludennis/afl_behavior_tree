@@ -7,6 +7,7 @@
 #include <moveForward.h>
 #include <moveBackward.h>
 #include <dropFork.h>
+#include <lowerFork.h>
 
 using namespace AFL;
 using namespace BT;
@@ -24,7 +25,7 @@ int main(int argc, char** argv)
   factory.registerNodeType<RaiseFork>("RaiseFork");
   factory.registerNodeType<MoveBackward>("MoveBackward");
   factory.registerNodeType<DropFork>("DropFork");
-  factory.registerNodeType<ForkLower>("ForkLower");
+  factory.registerNodeType<LowerFork>("ForkLower");
 
   std::string path;
   ros::param::get("~treeConfigPath", path);

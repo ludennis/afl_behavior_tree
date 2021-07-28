@@ -19,7 +19,7 @@
             <!-- ReadyPoint:x,y,yaw -->
             <!-- <Move2RP   name="Move2RP" ReadyPoint="{goal_pose}"/> 
             <DropFork name="DropFork" Height="{lay_height}"/>
-            <ForkLower name="ForkLower" Height="{lay_height}"/>
+            <LowerFork name="LowerFork" Height="{lay_height}"/>
             <Move2RP   name="Move2RP" ReadyPoint="{standby_pose}"/> -->
         </Sequence>
      </BehaviorTree>
