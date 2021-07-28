@@ -31,6 +31,7 @@ add_executable(${PROJECT_NAME}
   src/shared_class.cpp
   src/fork_insertion_controller.cpp
   src/moveToReadyPoint.cpp
+  src/moveToGoal.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

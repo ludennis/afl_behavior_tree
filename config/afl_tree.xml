@@ -3,7 +3,7 @@
         <Sequence name="root_sequence">
             <MoveToReadyPoint   name="MoveToReadyPoint" ReadyPoint="0.3;2.58;0"/> <!-- ReadyPoint:x,y,yaw -->
             <!-- <NormalDetection name="Start Detection"/> -->
-            <Move2Goal   name="Move2Goal" Pose="{targetPose}"/>
+            <MoveToGoal   name="MoveToGoal" Pose="{targetPose}"/>
             <!-- ***********lift up behavior sequence********************* -->
             <Sequence name="Liftup">
                 <Move2Height name="Move2Height" message="{targetPose}"/>

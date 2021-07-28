@@ -1,6 +1,7 @@
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include "afl_behavior.h"
 #include <moveToReadyPoint.h>
+#include <moveToGoal.h>
 
 using namespace AFL;
 using namespace BT;
@@ -12,7 +13,7 @@ int main(int argc, char** argv)
 
   factory.registerNodeType<MoveToReadyPoint>("MoveToReadyPoint");
   // factory.registerNodeType<NormalDetection>("NormalDetection");
-  factory.registerNodeType<Move2Goal>("Move2Goal");
+  factory.registerNodeType<MoveToGoal>("MoveToGoal");
   factory.registerNodeType<Move2Height>("Move2Height");
   factory.registerNodeType<MoveForward>("MoveForward");
   factory.registerNodeType<ForkHigher>("ForkHigher");    

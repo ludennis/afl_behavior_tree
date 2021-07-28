@@ -9,7 +9,7 @@ behavior_tree:
     # RP_rw: 1.0
     goal_completion_timeout: 120.0 #(sec)
 
-  move2goal:
+  moveToGoal:
     detected_object_topic: "/detected_object_front"
     Covariance_threshold: 30.0
     goal_completion_timeout: 120.0 # (sec)
