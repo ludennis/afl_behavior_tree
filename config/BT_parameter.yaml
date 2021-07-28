@@ -17,7 +17,7 @@ behavior_tree:
     ori_osci_threshold: 0.05
     pallet_height: 0.83 #(m)
 
-  move2height:
+  moveToHeight:
     goal_completion_timeout: 30.0 # (sec)
     height_offset: 0 # (mm)
 

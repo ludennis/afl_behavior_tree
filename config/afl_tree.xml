@@ -6,7 +6,7 @@
             <MoveToGoal   name="MoveToGoal" Pose="{targetPose}"/>
             <!-- ***********lift up behavior sequence********************* -->
             <Sequence name="Liftup">
-                <Move2Height name="Move2Height" message="{targetPose}"/>
+                <MoveToHeight name="MoveToHeight" message="{targetPose}"/>
                 <MoveForward name="MoveForward" message="{targetPose}"/>
                 <ForkHigher  name="ForkHigher" message="{targetPose}"/>
                 <MoveBackward name="MoveBackward" message="{targetPose}"/>

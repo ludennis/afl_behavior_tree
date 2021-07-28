@@ -32,6 +32,7 @@ add_executable(${PROJECT_NAME}
   src/fork_insertion_controller.cpp
   src/moveToReadyPoint.cpp
   src/moveToGoal.cpp
+  src/moveToHeight.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

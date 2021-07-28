@@ -5,14 +5,6 @@
 
 namespace AFL
 {
-  class Move2Height : public Forkctrl
-  {
-    public:
-      Move2Height(const std::string& name, const NodeConfiguration& config);
-      static BT::PortsList providedPorts();
-      BT::NodeStatus tick() override;
-  };
-
   class ForkHigher : public Forkctrl
   {
     public:
