@@ -34,6 +34,7 @@ add_executable(${PROJECT_NAME}
   src/moveToGoal.cpp
   src/moveToHeight.cpp
   src/raiseFork.cpp
+  src/moveForward.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

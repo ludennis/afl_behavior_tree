@@ -4,6 +4,7 @@
 #include <moveToGoal.h>
 #include <moveToHeight.h>
 #include <raiseFork.h>
+#include <moveForward.h>
 
 using namespace AFL;
 using namespace BT;
