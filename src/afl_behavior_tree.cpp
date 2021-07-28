@@ -6,6 +6,7 @@
 #include <raiseFork.h>
 #include <moveForward.h>
 #include <moveBackward.h>
+#include <dropFork.h>
 
 using namespace AFL;
 using namespace BT;
@@ -22,7 +23,7 @@ int main(int argc, char** argv)
   factory.registerNodeType<MoveForward>("MoveForward");
   factory.registerNodeType<RaiseFork>("RaiseFork");
   factory.registerNodeType<MoveBackward>("MoveBackward");
-  factory.registerNodeType<ForkDown>("ForkDown");
+  factory.registerNodeType<DropFork>("DropFork");
   factory.registerNodeType<ForkLower>("ForkLower");
 
   std::string path;

@@ -5,14 +5,6 @@
 
 namespace AFL
 {
-  class ForkDown : public Forkctrl
-  {
-    public:
-      ForkDown(const std::string& name, const NodeConfiguration& config);
-      static BT::PortsList providedPorts();
-      BT::NodeStatus tick() override;
-  };
-
   class ForkLower : public Forkctrl
   {
     public:

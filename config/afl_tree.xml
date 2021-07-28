@@ -10,7 +10,7 @@
                 <MoveForward name="MoveForward" message="{targetPose}"/>
                 <ForkHigher  name="ForkHigher" message="{targetPose}"/>
                 <MoveBackward name="MoveBackward" message="{targetPose}"/>
-                <ForkDown name="ForkDown" Height="250"/>
+                <DropFork name="DropFork" Height="250"/>
             </Sequence>
             <!-- ********************************************************* -->
             <!-- <SetBlackboard  output_key="lay_height" value="250" />
@@ -18,7 +18,7 @@
             <SetBlackboard  output_key="standby_pose" value="-1.0;2.58;0" /> -->
             <!-- ReadyPoint:x,y,yaw -->
             <!-- <Move2RP   name="Move2RP" ReadyPoint="{goal_pose}"/> 
-            <ForkDown name="ForkDown" Height="{lay_height}"/>
+            <DropFork name="DropFork" Height="{lay_height}"/>
             <ForkLower name="ForkLower" Height="{lay_height}"/>
             <Move2RP   name="Move2RP" ReadyPoint="{standby_pose}"/> -->
         </Sequence>

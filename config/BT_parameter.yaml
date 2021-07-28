@@ -25,7 +25,7 @@ behavior_tree:
     goal_completion_timeout: 30.0 # (sec)
     higher_distance: 100.0 #(mm)
 
-  forkdown:
+  dropfork:
     goal_completion_timeout: 30.0 # (sec)
 
   moveforward:
