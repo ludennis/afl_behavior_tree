@@ -5,6 +5,7 @@
 #include <moveToHeight.h>
 #include <raiseFork.h>
 #include <moveForward.h>
+#include <moveBackward.h>
 
 using namespace AFL;
 using namespace BT;
