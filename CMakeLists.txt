@@ -27,7 +27,6 @@ include_directories(
 
 add_executable(${PROJECT_NAME}
   src/afl_behavior_tree.cpp
-  src/afl_behavior.cpp
   src/shared_class.cpp
   src/fork_insertion_controller.cpp
   src/moveToReadyPoint.cpp

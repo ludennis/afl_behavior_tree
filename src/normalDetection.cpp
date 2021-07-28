@@ -1,4 +1,4 @@
-#include "afl_behavior.h"
+#include <afl_behavior.h>
 
 namespace AFL
 {

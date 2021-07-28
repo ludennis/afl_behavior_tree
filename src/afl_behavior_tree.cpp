@@ -1,5 +1,4 @@
 #include "behaviortree_cpp_v3/bt_factory.h"
-#include "afl_behavior.h"
 #include <moveToReadyPoint.h>
 #include <moveToGoal.h>
 #include <moveToHeight.h>
@@ -8,6 +7,7 @@
 #include <moveBackward.h>
 #include <dropFork.h>
 #include <lowerFork.h>
+#include <normalDetection.h>
 
 using namespace AFL;
 using namespace BT;

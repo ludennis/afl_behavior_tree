@@ -1,7 +1,7 @@
-#ifndef _AFL_BEHAVIOR_H_
-#define _AFL_BEHAVIOR_H_
+#ifndef _NORMAL_DETECTION_H_
+#define _NORMAL_DETECTION_H_
 
-#include "shared_class.h"
+#include <shared_class.h>
 
 namespace AFL
 {
@@ -14,6 +14,5 @@ namespace AFL
     protected:
       ros::NodeHandle n;
   };
-}
-
-#endif // _AFL_BEHAVIOR_
+} // namespace AFL
+#endif // _NORMAL_DETECTION_H_
