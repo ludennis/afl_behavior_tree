@@ -5,14 +5,6 @@
 
 namespace AFL
 {
-  class ForkHigher : public Forkctrl
-  {
-    public:
-      ForkHigher(const std::string& name, const NodeConfiguration& config);
-      static BT::PortsList providedPorts();
-      BT::NodeStatus tick() override;
-  };
-
   class MoveForward : public Navigation
   {
     public:

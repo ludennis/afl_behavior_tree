@@ -3,6 +3,7 @@
 #include <moveToReadyPoint.h>
 #include <moveToGoal.h>
 #include <moveToHeight.h>
+#include <raiseFork.h>
 
 using namespace AFL;
 using namespace BT;
@@ -17,7 +18,7 @@ int main(int argc, char** argv)
   factory.registerNodeType<MoveToGoal>("MoveToGoal");
   factory.registerNodeType<MoveToHeight>("Move2Height");
   factory.registerNodeType<MoveForward>("MoveForward");
-  factory.registerNodeType<ForkHigher>("ForkHigher");    
+  factory.registerNodeType<RaiseFork>("RaiseFork");
   factory.registerNodeType<MoveBackward>("MoveBackward");
   factory.registerNodeType<ForkDown>("ForkDown");
   factory.registerNodeType<ForkLower>("ForkLower");
