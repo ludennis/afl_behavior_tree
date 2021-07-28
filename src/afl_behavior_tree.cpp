@@ -21,7 +21,7 @@ int main(int argc, char** argv)
   factory.registerNodeType<MoveToReadyPoint>("MoveToReadyPoint");
   // factory.registerNodeType<NormalDetection>("NormalDetection");
   factory.registerNodeType<MoveToGoal>("MoveToGoal");
-  factory.registerNodeType<MoveToHeight>("Move2Height");
+  factory.registerNodeType<MoveToHeight>("MoveToHeight");
   factory.registerNodeType<MoveForward>("MoveForward");
   factory.registerNodeType<RaiseFork>("RaiseFork");
   factory.registerNodeType<MoveBackward>("MoveBackward");
