@@ -37,6 +37,7 @@ add_executable(${PROJECT_NAME}
   src/moveBackward.cpp
   src/dropFork.cpp
   src/lowerFork.cpp
+  src/waitForPalletDetection.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
