@@ -1,4 +1,4 @@
-#include "shared_class.h"
+#include <shared_class.h>
 
 namespace AFL
 {
@@ -11,7 +11,8 @@ namespace AFL
       ROS_INFO_STREAM_NAMED("AFL", "[AFL Navigation] Result: " <<
           releasebrake_msg.response.result);
     else
-      ROS_ERROR_STREAM_NAMED("AFL", "[AFL Navigation] Failed to call service setReleaseBrake");
+      ROS_ERROR_STREAM_NAMED("AFL",
+          "[AFL Navigation] Failed to call service setReleaseBrake");
   }
 
   void callService::setDeactivate()
@@ -30,14 +31,17 @@ namespace AFL
 
   void callService::setBackwardMode(bool mode)
   {
-    auto BackMode_client = this->nh.serviceClient<reconfigure_client::setBackwardMode>(
-        "/setBackwardMode");
+    auto BackMode_client =
+        this->nh.serviceClient<reconfigure_client::setBackwardMode>(
+            "/setBackwardMode");
     reconfigure_client::setBackwardMode BackMode_msg;
     BackMode_msg.request.mode = mode;
     if (BackMode_client.call(BackMode_msg))
-      ROS_INFO_STREAM_NAMED("AFL", "[AFL Behavior] Result: " << BackMode_msg.response.result);
+      ROS_INFO_STREAM_NAMED("AFL", "[AFL Behavior] Result: " <<
+          BackMode_msg.response.result);
     else
-      ROS_ERROR_STREAM_NAMED("AFL", "[AFL Behavior] Failed to call service setBackwardMode");
+      ROS_ERROR_STREAM_NAMED("AFL",
+          "[AFL Behavior] Failed to call service setBackwardMode");
   }
 
   void callService::clearCostmaps()
@@ -48,7 +52,8 @@ namespace AFL
     if (clear_costmaps_client.call(clear_costmaps_msg))
       ROS_INFO_STREAM_NAMED("AFL", "[AFL Behavior] Result: clearCostmaps success!");
     else
-      ROS_ERROR_STREAM_NAMED("AFL", "[AFL Behavior] Failed to call service clearCostmaps");
+      ROS_ERROR_STREAM_NAMED("AFL",
+          "[AFL Behavior] Failed to call service clearCostmaps");
   }
 
   ExtendedNode::ExtendedNode(const std::string& name, const NodeConfiguration& config)
@@ -126,7 +131,8 @@ namespace AFL
 
   BT::NodeStatus Forkctrl::isBehaviorFinished()
   {
-    bool finished_before_timeout = this->ac.waitForResult(ros::Duration(this->duration));
+    bool finished_before_timeout =
+        this->ac.waitForResult(ros::Duration(this->duration));
     Node_finished = true;
     if (finished_before_timeout)
     {
@@ -141,4 +147,4 @@ namespace AFL
       return BT::NodeStatus::FAILURE;
     }
   }
-}
+} // namespace AFL
