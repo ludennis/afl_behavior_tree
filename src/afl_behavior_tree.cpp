@@ -1,7 +1,7 @@
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include <moveToReadyPoint.h>
 #include <moveToGoal.h>
-#include <moveToHeight.h>
+#include <raiseForkActionNode.h>
 #include <raiseFork.h>
 #include <moveForward.h>
 #include <moveBackward.h>
@@ -21,7 +21,7 @@ int main(int argc, char** argv)
   factory.registerNodeType<MoveToReadyPoint>("MoveToReadyPoint");
   // factory.registerNodeType<NormalDetection>("NormalDetection");
   factory.registerNodeType<MoveToGoal>("MoveToGoal");
-  factory.registerNodeType<MoveToHeight>("MoveToHeight");
+  factory.registerNodeType<RaiseForkActionNode>("RaiseForkActionNode");
   factory.registerNodeType<MoveForward>("MoveForward");
   factory.registerNodeType<RaiseFork>("RaiseFork");
   factory.registerNodeType<MoveBackward>("MoveBackward");
