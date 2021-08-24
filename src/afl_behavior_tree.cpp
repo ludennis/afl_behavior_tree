@@ -9,6 +9,7 @@
 #include <lowerFork.h>
 #include <normalDetection.h>
 #include <waitForPalletDetection.h>
+#include <moveActionNode.h>
 
 using namespace AFL;
 using namespace BT;
@@ -20,6 +21,7 @@ int main(int argc, char** argv)
 
   factory.registerNodeType<MoveToReadyPoint>("MoveToReadyPoint");
   // factory.registerNodeType<NormalDetection>("NormalDetection");
+  factory.registerNodeType<MoveActionNode>("MoveActionNode");
   factory.registerNodeType<MoveToGoal>("MoveToGoal");
   factory.registerNodeType<RaiseForkActionNode>("RaiseForkActionNode");
   factory.registerNodeType<MoveForward>("MoveForward");
