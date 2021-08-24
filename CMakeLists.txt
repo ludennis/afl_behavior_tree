@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(afl_behavior_tree)
-
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+catkin_package(
+  DEPENDS aflctrl2 afl_fork_control
+)
 find_package(BehaviorTreeV3)
 
 find_package(catkin REQUIRED COMPONENTS
@@ -11,14 +14,12 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   actionlib
   move_base_msgs
-  afl_fork_control
   detection
-  aflctrl_msgs
   tf2
   tf2_ros
+  aflctrl2
+  afl_fork_control
 )
-
-catkin_package()
 
 include_directories(
   include
@@ -42,9 +43,6 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   BT::behaviortree_cpp_v3
-)
-
-target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
 
