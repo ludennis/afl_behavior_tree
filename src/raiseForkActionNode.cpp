@@ -11,8 +11,9 @@ RaiseForkActionNode::RaiseForkActionNode(
 
 BT::PortsList RaiseForkActionNode::providedPorts()
 {
-  return { BT::InputPort<geometry_msgs::PoseWithCovarianceStamped>(
-      "PalletPose") };
+  return {
+      BT::InputPort<geometry_msgs::PoseWithCovarianceStamped>("PalletPose"),
+      BT::InputPort<short int>("TargetHeight") };
 }
 
 BT::NodeStatus RaiseForkActionNode::tick()
@@ -21,14 +22,20 @@ BT::NodeStatus RaiseForkActionNode::tick()
 
   auto palletPose = getInput<geometry_msgs::PoseWithCovarianceStamped>(
       "PalletPose");
+  auto targetHeight = getInput<short int>("TargetHeight");
 
-  if (!palletPose)
+  if (!palletPose && !targetHeight)
   {
-    throw BT::RuntimeError("Missing required input [PalletPose]: ",
+    throw BT::RuntimeError(
+        "Missing required input PalletPose and TargetHeight: ",
         palletPose.error());
+    return BT::NodeStatus::FAILURE;
   }
+
   forkGoal.set_height =
-      abs(palletPose.value().pose.pose.position.z * 1e3);
+      (palletPose) ? abs(palletPose.value().pose.pose.position.z * 1e3) :
+      targetHeight.value();
+
   ROS_INFO_STREAM_NAMED("[AFL|afl_behavior_tree|RaiseForkActionNode]",
       this->name() << " setting for to height " << forkGoal.set_height
       << " mm");
