@@ -11,7 +11,7 @@
 #include <behaviortree_cpp_v3/action_node.h>
 
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
-#include <afl_fork_control/setForkAction.h>
+#include <afl_fork_control/setForkHeightAction.h>
 
 namespace AFL
 {
@@ -22,10 +22,11 @@ class RaiseForkActionNode : public BT::SyncActionNode
   RaiseForkActionNode(const std::string &name, const BT::NodeConfiguration &config);
   static BT::PortsList providedPorts();
   BT::NodeStatus tick() override;
-  BT::NodeStatus sendForkGoal(const afl_fork_control::setForkGoal &forkGoal);
+  BT::NodeStatus sendForkHeightGoal(
+      const afl_fork_control::setForkHeightGoal &forkHeightGoal);
 
  private:
-  actionlib::SimpleActionClient<afl_fork_control::setForkAction> mActionClient;
+  actionlib::SimpleActionClient<afl_fork_control::setForkHeightAction> mActionClient;
 };
 
 } // namespace AFL

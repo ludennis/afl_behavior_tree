@@ -8,7 +8,7 @@ namespace AFL
 
   BT::PortsList RaiseFork::providedPorts()
   {
-    return { InputPort<GoalPose>("message") };
+    return { InputPort<geometry_msgs::PoseWithCovarianceStamped>("PalletPose") };
   }
 
   BT::NodeStatus RaiseFork::tick()
