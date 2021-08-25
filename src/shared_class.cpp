@@ -18,9 +18,9 @@ namespace AFL
   void callService::setDeactivate()
   {
     //shut down the detection
-    auto deactivate = this->nh.serviceClient<detection::DeactivateDetection>(
+    auto deactivate = this->nh.serviceClient<afl_detection::DeactivateDetection>(
         "/deactivate_detection");
-    detection::DeactivateDetection deactivate_msg;
+    afl_detection::DeactivateDetection deactivate_msg;
     if (deactivate.call(deactivate_msg))
       ROS_INFO_STREAM_NAMED("AFL", "[AFL Navigation] Result: " <<
           deactivate_msg.response.done);

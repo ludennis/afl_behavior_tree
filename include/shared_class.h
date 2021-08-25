@@ -23,9 +23,8 @@
 #include <std_msgs/String.h>
 #include "reconfigure_client/setBackwardMode.h"
 
-#include "detection/ActivateNormalDetection.h"
-#include "detection/ActivateRallyDetection.h"
-#include "detection/DeactivateDetection.h"
+#include "afl_detection/ActivateDetection.h"
+#include "afl_detection/DeactivateDetection.h"
 #include "fork_insertion_controller.h"
 
 #include <ros/ros.h>

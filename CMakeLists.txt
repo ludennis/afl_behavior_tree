@@ -14,7 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   actionlib
   move_base_msgs
-  detection
+  afl_detection
   tf2
   tf2_ros
   aflctrl2
