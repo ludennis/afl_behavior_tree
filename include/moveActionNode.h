@@ -21,11 +21,12 @@ class MoveActionNode : public BT::SyncActionNode
   MoveActionNode(const std::string &name, const BT::NodeConfiguration &config);
   static BT::PortsList providedPorts();
   BT::NodeStatus tick() override;
-  BT::NodeStatus sendMoveGoal(const move_base_msgs::MoveBaseGoal &moveGoal);
+  BT::NodeStatus sendMoveGoal(
+      const move_base_msgs::MoveBaseGoal &moveBaseGoal);
 
  private:
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> mActionClient;
-  move_base_msgs::MoveBaseGoal mMoveGoal;
+  move_base_msgs::MoveBaseGoal mMoveBaseGoal;
 };
 
 } // namespace AFL

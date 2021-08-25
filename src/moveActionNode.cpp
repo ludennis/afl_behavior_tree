@@ -27,15 +27,18 @@ BT::NodeStatus MoveActionNode::tick()
     return BT::NodeStatus::FAILURE;
   }
 
-  this->mMoveGoal.target_pose.pose = targetPose->pose.pose;
-  this->mMoveGoal.target_pose.header.frame_id = "map";
+  mMoveBaseGoal.target_pose.pose = targetPose->pose.pose;
+  mMoveBaseGoal.target_pose.pose.position.z = 0.0;
+  mMoveBaseGoal.target_pose.header.frame_id = "map";
+
+  return sendMoveGoal(mMoveBaseGoal);
 }
 
 BT::NodeStatus MoveActionNode::sendMoveGoal(
-    const move_base_msgs::MoveBaseGoal &moveGoal)
+    const move_base_msgs::MoveBaseGoal &moveBaseGoal)
 {
   this->mActionClient.waitForServer();
-  this->mActionClient.sendGoal(moveGoal);
+  this->mActionClient.sendGoal(moveBaseGoal);
   bool success = this->mActionClient.waitForResult(ros::Duration(25));
 
   if (success)
