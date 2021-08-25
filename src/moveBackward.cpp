@@ -2,59 +2,53 @@
 
 namespace AFL
 {
-  MoveBackward::MoveBackward(const std::string& name, const NodeConfiguration& config)
-  : Navigation(name, config)
+
+MoveBackward::MoveBackward(const std::string& name, const NodeConfiguration& config)
+: BT::SyncActionNode(name, config)
+, mActionClient(name, true)
+{
+  mCurrentPoseTopic = getInput<std::string>("CurrentPoseTopic");
+  mTargetDistance = getInput<short int>("TargetDistance");
+}
+
+BT::PortsList MoveBackward::providedPorts()
+{
+  return { InputPort<std::string>("CurrentPoseTopic"),
+      InputPort<short int>("TargetDistance")
+  };
+}
+
+BT::NodeStatus MoveBackward::tick()
+{
+  auto currentPose =
+      ros::topic::waitForMessage<geometry_msgs::PoseWithCovarianceStamped>(
+          mCurrentPoseTopic.value_or("empty"), ros::Duration(10));
+
+  // set goal to be behind itself
+  if (currentPose)
   {
-    this->object_pose = new float[7]; // x, y, Quaternion
-  }
+    mMoveBaseGoal.target_pose.pose = currentPose->pose.pose;
+    mMoveBaseGoal.target_pose.pose.position.x += mTargetDistance.value_or(0);
+    mMoveBaseGoal.target_pose.header.frame_id = "map";
 
-  BT::PortsList MoveBackward::providedPorts()
+    return sendMoveGoal(mMoveBaseGoal);
+  }
+  else
   {
-    return { InputPort<GoalPose>("message") };
+    return BT::NodeStatus::FAILURE;
   }
+}
 
-  BT::NodeStatus MoveBackward::tick()
-  {
-    publishBehaviorState();
-    ROS_INFO_STREAM_NAMED("AFL","[afl_behavior_tree] Behavior: " << this->name() <<
-        " actionNode initializing") ;
+BT::NodeStatus MoveBackward::sendMoveGoal(
+    const move_base_msgs::MoveBaseGoal &moveBaseGoal)
+{
+  mActionClient.waitForServer();
+  mActionClient.sendGoal(moveBaseGoal);
+  bool success = mActionClient.waitForResult(ros::Duration(25));
 
-    // main implementation
-    ros::param::get("~behavior_tree/MoveBackward/goal_completion_timeout", this->duration);
-    ros::param::get("~behavior_tree/MoveBackward/Covariance_threshold", this->threshold);
-
-    // Get height from port
-    ROS_INFO_STREAM_NAMED("AFL","[afl_behavior_tree] MoveBackward pose " <<
-        this->Pose.value().poseback.position.x ) ;
-    this->Pose = getInput<GoalPose>("message");
-
-    // Check if optional is valid. If not, throw its error
-    if (!this->Pose)
-    {
-      throw BT::RuntimeError("missing required input [message]: ", this->Pose.error());
-    }
-
-    //set Backward direction Mode
-    this->setBackwardMode(true);
-    move_base_msgs::MoveBaseGoal goal;
-    goal.target_pose.pose.position.x = this->Pose.value().posefront.position.x;
-    goal.target_pose.pose.position.y = this->Pose.value().posefront.position.y;
-    goal.target_pose.pose.position.z = 0.0;
-    goal.target_pose.header.frame_id = "map";
-    //inverse the orientation of goal
-    tf2::Quaternion q_rot, q_orig, q_new;
-    tf2::convert(this->Pose.value().poseback.orientation , q_orig);
-    double r = 0, p = 0, y = 3.14159;
-    q_rot.setRPY(r, p, y);
-    q_new = q_rot*q_orig;
-    q_new.normalize();
-    tf2::convert(q_new, goal.target_pose.pose.orientation);
-
-    this->setReleaseBrake();
-    ros::Duration(0.5).sleep();
-    this->clearCostmaps();
-    sendGoal(goal);
-
-    return isBehaviorFinished();
-  }
+  if (success)
+    return BT::NodeStatus::SUCCESS;
+  else
+    return BT::NodeStatus::FAILURE;
+}
 } // namespace AFL
