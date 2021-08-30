@@ -1,6 +1,7 @@
 #ifndef _WAIT_FOR_PALLET_DETECTION_H_
 #define _WAIT_FOR_PALLET_DETECTION_H_
 
+#include <tf/transform_listener.h>
 #include <shared_class.h>
 
 namespace AFL
@@ -15,7 +16,8 @@ namespace AFL
 
    private:
     ros::NodeHandle mNodeHandle;
-    Optional<std::string> mPalletDetectionTopic;
+    Optional<std::string> mPalletTfName;
+    Optional<std::string> mRobotTfName;
   };
 } // namespace AFL
 

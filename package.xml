@@ -12,6 +12,7 @@
 
   <depend>afl_fork_control</depend>
   <depend>aflctrl2</depend>
+  <depend>tf</depend>
 
   <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
