@@ -12,7 +12,7 @@ RaiseForkActionNode::RaiseForkActionNode(
 BT::PortsList RaiseForkActionNode::providedPorts()
 {
   return {
-      BT::InputPort<geometry_msgs::PoseWithCovarianceStamped>("PalletPose"),
+      BT::InputPort<tf::StampedTransform>("PalletPose"),
       BT::InputPort<short int>("TargetHeight"),
       BT::InputPort<short int>("PalletThickness"),
       BT::InputPort<short int>("PalletBottomPadding")
@@ -21,10 +21,9 @@ BT::PortsList RaiseForkActionNode::providedPorts()
 
 BT::NodeStatus RaiseForkActionNode::tick()
 {
-  auto palletPose = getInput<geometry_msgs::PoseWithCovarianceStamped>(
-      "PalletPose");
   auto palletThickness = getInput<short int>("PalletThickness");
   auto palletBottomPadding = getInput<short int>("PalletBottomPadding");
+  auto palletPose = getInput<tf::StampedTransform>("PalletPose");
   auto targetHeight = getInput<short int>("TargetHeight");
 
   if (!palletPose && !targetHeight)
@@ -37,7 +36,7 @@ BT::NodeStatus RaiseForkActionNode::tick()
 
   afl_fork_control::setForkHeightGoal forkHeightGoal;
   forkHeightGoal.targetHeight =
-      (palletPose) ? abs(palletPose.value().pose.pose.position.z * 1e3 -
+      (palletPose) ? abs(palletPose.value().getOrigin().getZ() * 1e3 -
       palletThickness.value() / 2 + palletBottomPadding.value()) :
       targetHeight.value();
 
