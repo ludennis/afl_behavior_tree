@@ -13,14 +13,14 @@ BT::PortsList MoveActionNode::providedPorts()
 {
   return {
       BT::InputPort<tf::StampedTransform>("TargetPose"),
-      BT::InputPort<short int>("BackAwayDistance")
+      BT::InputPort<short int>("TargetPoseOffset")
   };
 }
 
 BT::NodeStatus MoveActionNode::tick()
 {
   auto targetPose = getInput<tf::StampedTransform>("TargetPose");
-  auto backAwayDistance = getInput<short int>("BackAwayDistance");
+  auto targetPoseOffset = getInput<short int>("TargetPoseOffset");
 
   if (!targetPose)
   {
@@ -30,7 +30,7 @@ BT::NodeStatus MoveActionNode::tick()
   }
 
   mMoveBaseGoal.target_pose.pose.position.x = targetPose->getOrigin().getX()
-      - backAwayDistance.value_or(0);
+      + targetPoseOffset.value_or(0);
   mMoveBaseGoal.target_pose.pose.position.y = targetPose->getOrigin().getY();
   mMoveBaseGoal.target_pose.pose.position.z = 0.0;
   mMoveBaseGoal.target_pose.header.frame_id = "map";
