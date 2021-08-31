@@ -1,15 +1,15 @@
-#include <raiseForkActionNode.h>
+#include <ForkActionNode.h>
 
 namespace AFL
 {
 
-RaiseForkActionNode::RaiseForkActionNode(
+ForkActionNode::ForkActionNode(
     const std::string &name, const BT::NodeConfiguration &config)
 : BT::SyncActionNode(name, config)
 , mActionClient("aflSetForkHeightAction", true)
 {}
 
-BT::PortsList RaiseForkActionNode::providedPorts()
+BT::PortsList ForkActionNode::providedPorts()
 {
   return {
       BT::InputPort<tf::StampedTransform>("PalletPose"),
@@ -20,7 +20,7 @@ BT::PortsList RaiseForkActionNode::providedPorts()
   };
 }
 
-BT::NodeStatus RaiseForkActionNode::tick()
+BT::NodeStatus ForkActionNode::tick()
 {
   auto palletThickness = getInput<short int>("PalletThickness");
   auto palletBottomPadding = getInput<short int>("PalletBottomPadding");
@@ -52,21 +52,21 @@ BT::NodeStatus RaiseForkActionNode::tick()
         "/afl/sick_DT50", ros::Duration(10));
     if (!currentHeight)
     {
-      ROS_ERROR_NAMED("AFL", "[afl_behavior_tree | RaiseForkActionNode] "
+      ROS_ERROR_NAMED("AFL", "[afl_behavior_tree | ForkActionNode] "
           "missing height sensor data when given TargetHeightOffset");
       return BT::NodeStatus::FAILURE;
     }
     forkHeightGoal.targetHeight = currentHeight->data + targetHeightOffset.value();
   }
 
-  ROS_INFO_STREAM_NAMED("[AFL|afl_behavior_tree|RaiseForkActionNode]",
+  ROS_INFO_STREAM_NAMED("[AFL|afl_behavior_tree|ForkActionNode]",
       this->name() << " setting for to height " << forkHeightGoal.targetHeight
       << " mm");
 
   return sendForkHeightGoal(forkHeightGoal);
 }
 
-BT::NodeStatus RaiseForkActionNode::sendForkHeightGoal(
+BT::NodeStatus ForkActionNode::sendForkHeightGoal(
     const afl_fork_control::setForkHeightGoal &forkHeightGoal)
 {
   this->mActionClient.waitForServer();

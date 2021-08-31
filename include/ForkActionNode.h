@@ -18,10 +18,10 @@
 namespace AFL
 {
 
-class RaiseForkActionNode : public BT::SyncActionNode
+class ForkActionNode : public BT::SyncActionNode
 {
  public:
-  RaiseForkActionNode(const std::string &name, const BT::NodeConfiguration &config);
+  ForkActionNode(const std::string &name, const BT::NodeConfiguration &config);
   static BT::PortsList providedPorts();
   BT::NodeStatus tick() override;
   BT::NodeStatus sendForkHeightGoal(

@@ -31,7 +31,7 @@ add_executable(${PROJECT_NAME}
   src/fork_insertion_controller.cpp
   src/moveToReadyPoint.cpp
   src/moveToGoal.cpp
-  src/raiseForkActionNode.cpp
+  src/ForkActionNode.cpp
   src/raiseFork.cpp
   src/moveForward.cpp
   src/moveBackward.cpp
