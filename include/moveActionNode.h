@@ -10,7 +10,7 @@
 #include <behaviortree_cpp_v3/action_node.h>
 
 #include <move_base_msgs/MoveBaseAction.h>
-#include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <tf/transform_datatypes.h>
 
 namespace AFL
 {

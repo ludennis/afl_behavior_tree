@@ -6,19 +6,19 @@ namespace AFL
 MoveActionNode::MoveActionNode(
     const std::string &name, const BT::NodeConfiguration &config)
 : SyncActionNode(name, config)
-, mActionClient("RaiseForkActionClient", true)
+, mActionClient("move_base", true)
 {}
 
 BT::PortsList MoveActionNode::providedPorts()
 {
   return {
-      BT::InputPort<geometry_msgs::PoseWithCovarianceStamped>("TargetPose") };
+      BT::InputPort<tf::StampedTransform>("TargetPose") };
 }
 
 BT::NodeStatus MoveActionNode::tick()
 {
   auto targetPose =
-      getInput<geometry_msgs::PoseWithCovarianceStamped>("TargetPose");
+      getInput<tf::StampedTransform>("TargetPose");
 
   if (!targetPose)
   {
@@ -27,7 +27,8 @@ BT::NodeStatus MoveActionNode::tick()
     return BT::NodeStatus::FAILURE;
   }
 
-  mMoveBaseGoal.target_pose.pose = targetPose->pose.pose;
+  mMoveBaseGoal.target_pose.pose.position.x = targetPose->getOrigin().getX();
+  mMoveBaseGoal.target_pose.pose.position.y = targetPose->getOrigin().getY();
   mMoveBaseGoal.target_pose.pose.position.z = 0.0;
   mMoveBaseGoal.target_pose.header.frame_id = "map";
 
@@ -37,10 +38,17 @@ BT::NodeStatus MoveActionNode::tick()
 BT::NodeStatus MoveActionNode::sendMoveGoal(
     const move_base_msgs::MoveBaseGoal &moveBaseGoal)
 {
-  this->mActionClient.waitForServer();
-  this->mActionClient.sendGoal(moveBaseGoal);
-  bool success = this->mActionClient.waitForResult(ros::Duration(25));
+  ROS_INFO_STREAM_NAMED("AFL","[afl_behavior_tree] " << this->name() <<
+      ": waiting for move base action server to start.");
 
+  this->mActionClient.waitForServer();
+
+  ROS_INFO_STREAM_NAMED("AFL", "[afl_behavior_tree] " << this->name() <<
+      ": move base action server started, sending goal.");
+
+  this->mActionClient.sendGoal(moveBaseGoal);
+
+  bool success = this->mActionClient.waitForResult(ros::Duration(25));
   if (success)
     return BT::NodeStatus::SUCCESS;
   else
