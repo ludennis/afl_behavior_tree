@@ -4,8 +4,8 @@ namespace AFL
 {
 
 WaitForPalletDetection::WaitForPalletDetection(
-    const std::string &name, const NodeConfiguration &config)
-: ExtendedNode(name, config)
+    const std::string &name, const BT::NodeConfiguration &config)
+: BT::SyncActionNode(name, config)
 {
   mPalletTfName = getInput<std::string>("PalletTfName");
   mRobotTfName = getInput<std::string>("RobotTfName");
@@ -47,12 +47,12 @@ BT::NodeStatus WaitForPalletDetection::tick()
   return BT::NodeStatus::SUCCESS;
 }
 
-PortsList WaitForPalletDetection::providedPorts()
+BT::PortsList WaitForPalletDetection::providedPorts()
 {
   return {
-    InputPort<std::string>("PalletTfName"),
-    InputPort<std::string>("RobotTfName"),
-    OutputPort<tf::StampedTransform>("PalletPose")
+    BT::InputPort<std::string>("PalletTfName"),
+    BT::InputPort<std::string>("RobotTfName"),
+    BT::OutputPort<tf::StampedTransform>("PalletPose")
   };
 }
 
