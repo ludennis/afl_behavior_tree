@@ -13,20 +13,20 @@ BT::PortsList ForkActionNode::providedPorts()
 {
   return {
       BT::InputPort<tf::StampedTransform>("PalletPose"),
-      BT::InputPort<short int>("TargetHeight"),
-      BT::InputPort<short int>("PalletThickness"),
-      BT::InputPort<short int>("PalletBottomPadding"),
-      BT::InputPort<short int>("TargetHeightOffset")
+      BT::InputPort<int>("TargetHeight"),
+      BT::InputPort<int>("PalletThickness"),
+      BT::InputPort<int>("PalletBottomPadding"),
+      BT::InputPort<int>("TargetHeightOffset")
   };
 }
 
 BT::NodeStatus ForkActionNode::tick()
 {
-  auto palletThickness = getInput<short int>("PalletThickness");
-  auto palletBottomPadding = getInput<short int>("PalletBottomPadding");
+  auto palletThickness = getInput<int>("PalletThickness");
+  auto palletBottomPadding = getInput<int>("PalletBottomPadding");
   auto palletPose = getInput<tf::StampedTransform>("PalletPose");
-  auto targetHeight = getInput<short int>("TargetHeight");
-  auto targetHeightOffset = getInput<short int>("TargetHeightOffset");
+  auto targetHeight = getInput<int>("TargetHeight");
+  auto targetHeightOffset = getInput<int>("TargetHeightOffset");
 
   if (!palletPose && !targetHeight && !targetHeightOffset)
   {
