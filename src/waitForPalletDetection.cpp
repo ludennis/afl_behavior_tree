@@ -8,19 +8,19 @@ WaitForPalletDetection::WaitForPalletDetection(
 : BT::SyncActionNode(name, config)
 {
   mPalletTfName = getInput<std::string>("PalletTfName");
-  mRobotTfName = getInput<std::string>("RobotTfName");
+  mMapTfName= getInput<std::string>("MapTfName");
 }
 
 BT::NodeStatus WaitForPalletDetection::tick()
 {
   tf::StampedTransform stampedTransform;
   tf::TransformListener tfListener;
-  tfListener.waitForTransform(mRobotTfName.value(), mPalletTfName.value(), ros::Time(),
+  tfListener.waitForTransform(mMapTfName.value(), mPalletTfName.value(), ros::Time(),
       ros::Duration(120.0));
 
   try
   {
-    tfListener.lookupTransform(mRobotTfName.value(), mPalletTfName.value(), ros::Time(),
+    tfListener.lookupTransform(mMapTfName.value(), mPalletTfName.value(), ros::Time(),
         stampedTransform);
 
     double yaw, pitch, roll;
@@ -51,7 +51,7 @@ BT::PortsList WaitForPalletDetection::providedPorts()
 {
   return {
     BT::InputPort<std::string>("PalletTfName"),
-    BT::InputPort<std::string>("RobotTfName"),
+    BT::InputPort<std::string>("MapTfName"),
     BT::OutputPort<tf::StampedTransform>("PalletPose")
   };
 }

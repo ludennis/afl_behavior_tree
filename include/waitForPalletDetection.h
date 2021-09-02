@@ -23,7 +23,7 @@ namespace AFL
    private:
     ros::NodeHandle mNodeHandle;
     BT::Optional<std::string> mPalletTfName;
-    BT::Optional<std::string> mRobotTfName;
+    BT::Optional<std::string> mMapTfName;
   };
 } // namespace AFL
 
