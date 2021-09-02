@@ -13,14 +13,14 @@ BT::PortsList MoveActionNode::providedPorts()
 {
   return {
       BT::InputPort<tf::StampedTransform>("TargetPose"),
-      BT::InputPort<short int>("TargetPoseOffset")
+      BT::InputPort<int>("TargetPoseOffset"),
   };
 }
 
 BT::NodeStatus MoveActionNode::tick()
 {
   auto targetPose = getInput<tf::StampedTransform>("TargetPose");
-  auto targetPoseOffset = getInput<short int>("TargetPoseOffset");
+  auto targetPoseOffset = getInput<int>("TargetPoseOffset");
 
   if (!targetPose)
   {
@@ -32,8 +32,12 @@ BT::NodeStatus MoveActionNode::tick()
   mMoveBaseGoal.target_pose.pose.position.x = targetPose->getOrigin().getX()
       + targetPoseOffset.value_or(0);
   mMoveBaseGoal.target_pose.pose.position.y = targetPose->getOrigin().getY();
-  mMoveBaseGoal.target_pose.pose.position.z = 0.0;
+  mMoveBaseGoal.target_pose.pose.orientation.z = targetPose->getRotation().getZ();
+  mMoveBaseGoal.target_pose.pose.orientation.w = targetPose->getRotation().getW();
   mMoveBaseGoal.target_pose.header.frame_id = "map";
+
+  ROS_INFO_STREAM_NAMED("AFL",
+      "[afl_behavior_tree] Sending move base goal: " << mMoveBaseGoal.target_pose);
 
   return sendMoveGoal(mMoveBaseGoal);
 }
