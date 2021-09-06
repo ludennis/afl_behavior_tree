@@ -13,20 +13,20 @@ BT::PortsList ForkActionNode::providedPorts()
 {
   return {
       BT::InputPort<tf::StampedTransform>("PalletPose"),
-      BT::InputPort<int>("TargetHeight"),
-      BT::InputPort<int>("PalletThickness"),
-      BT::InputPort<int>("PalletBottomPadding"),
-      BT::InputPort<int>("TargetHeightOffset")
+      BT::InputPort<double>("TargetHeight"),
+      BT::InputPort<double>("PalletThickness"),
+      BT::InputPort<double>("PalletBottomPadding"),
+      BT::InputPort<double>("TargetHeightOffset")
   };
 }
 
 BT::NodeStatus ForkActionNode::tick()
 {
-  auto palletThickness = getInput<int>("PalletThickness");
-  auto palletBottomPadding = getInput<int>("PalletBottomPadding");
+  auto palletThickness = getInput<double>("PalletThickness");
+  auto palletBottomPadding = getInput<double>("PalletBottomPadding");
   auto palletPose = getInput<tf::StampedTransform>("PalletPose");
-  auto targetHeight = getInput<int>("TargetHeight");
-  auto targetHeightOffset = getInput<int>("TargetHeightOffset");
+  auto targetHeight = getInput<double>("TargetHeight");
+  auto targetHeightOffset = getInput<double>("TargetHeightOffset");
 
   if (!palletPose && !targetHeight && !targetHeightOffset)
   {
@@ -39,12 +39,12 @@ BT::NodeStatus ForkActionNode::tick()
   afl_fork_control::setForkHeightGoal forkHeightGoal;
   if (palletPose)
   {
-    forkHeightGoal.targetHeight = abs(palletPose.value().getOrigin().getZ()
-        * 1e3 - palletThickness.value() / 2 + palletBottomPadding.value());
+    forkHeightGoal.targetHeight = (abs(palletPose.value().getOrigin().getZ()
+        - palletThickness.value() / 2 + palletBottomPadding.value())) * 1e3;
   }
   else if (targetHeight)
   {
-    forkHeightGoal.targetHeight = targetHeight.value();
+    forkHeightGoal.targetHeight = targetHeight.value() * 1e3;
   }
   else
   {
@@ -56,7 +56,8 @@ BT::NodeStatus ForkActionNode::tick()
           "missing height sensor data when given TargetHeightOffset");
       return BT::NodeStatus::FAILURE;
     }
-    forkHeightGoal.targetHeight = currentHeight->data + targetHeightOffset.value();
+    forkHeightGoal.targetHeight =
+        currentHeight->data + targetHeightOffset.value() * 1e3;
   }
 
   ROS_INFO_STREAM_NAMED("[AFL|afl_behavior_tree|ForkActionNode]",
