@@ -16,7 +16,8 @@ BT::PortsList ForkActionNode::providedPorts()
       BT::InputPort<double>("TargetHeight"),
       BT::InputPort<double>("PalletThickness"),
       BT::InputPort<double>("PalletBottomPadding"),
-      BT::InputPort<double>("TargetHeightOffset")
+      BT::InputPort<double>("TargetHeightOffset"),
+      BT::InputPort<double>("AscendingOvershootOffset")
   };
 }
 
@@ -27,6 +28,7 @@ BT::NodeStatus ForkActionNode::tick()
   auto palletPose = getInput<tf::StampedTransform>("PalletPose");
   auto targetHeight = getInput<double>("TargetHeight");
   auto targetHeightOffset = getInput<double>("TargetHeightOffset");
+  auto ascendingOvershootOffset = getInput<double>("AscendingOvershootOffset");
 
   if (!palletPose && !targetHeight && !targetHeightOffset)
   {
@@ -60,8 +62,12 @@ BT::NodeStatus ForkActionNode::tick()
         currentHeight->data + targetHeightOffset.value() * 1e3;
   }
 
+  forkHeightGoal.ascendingOvershootOffset =
+      ascendingOvershootOffset.value_or(0.0) * 1e3;
+
   ROS_INFO_STREAM_NAMED("[AFL|afl_behavior_tree|ForkActionNode]",
       this->name() << " setting for to height " << forkHeightGoal.targetHeight
+      << " mm, with overshoot = " << forkHeightGoal.ascendingOvershootOffset
       << " mm");
 
   return sendForkHeightGoal(forkHeightGoal);
