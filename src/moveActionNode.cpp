@@ -29,9 +29,12 @@ BT::NodeStatus MoveActionNode::tick()
     return BT::NodeStatus::FAILURE;
   }
 
-  mMoveBaseGoal.target_pose.pose.position.x = targetPose->getOrigin().getX()
-      + targetPoseOffset.value_or(0.0);
-  mMoveBaseGoal.target_pose.pose.position.y = targetPose->getOrigin().getY();
+  tf::Matrix3x3 m(targetPose->getRotation());
+
+  mMoveBaseGoal.target_pose.pose.position.x = targetPose->getOrigin().getX() +
+      m[0][0] * targetPoseOffset.value_or(0.0);
+  mMoveBaseGoal.target_pose.pose.position.y = targetPose->getOrigin().getY() +
+      m[1][0] * targetPoseOffset.value_or(0.0);
   mMoveBaseGoal.target_pose.pose.orientation.z = targetPose->getRotation().getZ();
   mMoveBaseGoal.target_pose.pose.orientation.w = targetPose->getRotation().getW();
   mMoveBaseGoal.target_pose.header.frame_id = "map";

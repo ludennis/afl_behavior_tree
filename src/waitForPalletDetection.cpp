@@ -36,10 +36,6 @@ BT::NodeStatus WaitForPalletDetection::tick()
         << "            in RPY (degree) [" <<  roll*180.0/M_PI << ", " << pitch*180.0/M_PI
         << ", " << yaw*180.0/M_PI << "]" << std::endl;
 
-    // TODO: remove this after pallet detectin is fixed
-    v.setY(v.getY() - 0.1);
-    stampedTransform.setOrigin(v);
-
     setOutput("PalletPose", stampedTransform);
   }
   catch (tf::TransformException &ex)

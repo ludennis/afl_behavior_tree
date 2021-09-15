@@ -10,7 +10,7 @@
 #include <actionlib/client/terminal_state.h>
 #include <behaviortree_cpp_v3/action_node.h>
 
-#include <std_msgs/UInt16.h>
+#include <std_msgs/Float64.h>
 #include <afl_fork_control/setForkHeightAction.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <tf/transform_datatypes.h>

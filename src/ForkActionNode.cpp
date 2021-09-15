@@ -48,10 +48,10 @@ BT::NodeStatus ForkActionNode::tick()
   {
     forkHeightGoal.targetHeight = targetHeight.value() * 1e3;
   }
-  else
+  else if (targetHeightOffset)
   {
-    auto currentHeight = ros::topic::waitForMessage<std_msgs::UInt16>(
-        "/afl/sick_DT50", ros::Duration(10));
+    auto currentHeight = ros::topic::waitForMessage<std_msgs::Float64>(
+        "/afl/fork_height", ros::Duration(10));
     if (!currentHeight)
     {
       ROS_ERROR_NAMED("AFL", "[afl_behavior_tree | ForkActionNode] "
@@ -59,14 +59,14 @@ BT::NodeStatus ForkActionNode::tick()
       return BT::NodeStatus::FAILURE;
     }
     forkHeightGoal.targetHeight =
-        currentHeight->data + targetHeightOffset.value() * 1e3;
+        (currentHeight->data + targetHeightOffset.value()) * 1e3;
   }
 
   forkHeightGoal.ascendingOvershootOffset =
       ascendingOvershootOffset.value_or(0.0) * 1e3;
 
   ROS_INFO_STREAM_NAMED("[AFL|afl_behavior_tree|ForkActionNode]",
-      this->name() << " setting for to height " << forkHeightGoal.targetHeight
+      this->name() << " setting fork to height " << forkHeightGoal.targetHeight
       << " mm, with overshoot = " << forkHeightGoal.ascendingOvershootOffset
       << " mm");
 
