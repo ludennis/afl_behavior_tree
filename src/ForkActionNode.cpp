@@ -17,7 +17,8 @@ BT::PortsList ForkActionNode::providedPorts()
       BT::InputPort<double>("PalletThickness"),
       BT::InputPort<double>("PalletBottomPadding"),
       BT::InputPort<double>("TargetHeightOffset"),
-      BT::InputPort<double>("AscendingOvershootOffset")
+      BT::InputPort<double>("AscendingOvershootOffset"),
+      BT::OutputPort<double>("TickDescendHeight")
   };
 }
 
@@ -69,6 +70,8 @@ BT::NodeStatus ForkActionNode::tick()
       this->name() << " setting fork to height " << forkHeightGoal.targetHeight
       << " mm, with overshoot = " << forkHeightGoal.ascendingOvershootOffset
       << " mm");
+
+  setOutput("TickDescendHeight", forkHeightGoal.targetHeight * 1e-3);
 
   return sendForkHeightGoal(forkHeightGoal);
 }
