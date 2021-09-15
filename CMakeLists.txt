@@ -40,6 +40,7 @@ add_executable(${PROJECT_NAME}
   src/waitForPalletDetection.cpp
   src/moveActionNode.cpp
   src/LowerForkActionNode.cpp
+  src/ForkTickDescend.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

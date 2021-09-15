@@ -11,6 +11,7 @@
 #include <waitForPalletDetection.h>
 #include <moveActionNode.h>
 #include <LowerForkActionNode.h>
+#include <ForkTickDescend.h>
 
 using namespace AFL;
 using namespace BT;
@@ -31,6 +32,7 @@ int main(int argc, char** argv)
   factory.registerNodeType<LowerFork>("ForkLower");
   factory.registerNodeType<WaitForPalletDetection>("WaitForPalletDetection");
   factory.registerNodeType<LowerForkActionNode>("LowerForkActionNode");
+  factory.registerNodeType<ForkTickDescend>("ForkTickDescend");
 
   std::string path;
   ros::param::get("~treeConfigPath", path);
