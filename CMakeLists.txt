@@ -41,6 +41,7 @@ add_executable(${PROJECT_NAME}
   src/moveActionNode.cpp
   src/LowerForkActionNode.cpp
   src/ForkTickDescend.cpp
+  src/DetectionClient.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
