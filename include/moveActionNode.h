@@ -12,6 +12,9 @@
 #include <move_base_msgs/MoveBaseAction.h>
 #include <tf/transform_datatypes.h>
 
+#include <aflctrl_msgs/setReleaseBrake.h>
+#include <aflctrl_msgs/setAutoMode.h>
+
 namespace AFL
 {
 
@@ -25,8 +28,11 @@ class MoveActionNode : public BT::SyncActionNode
       const move_base_msgs::MoveBaseGoal &moveBaseGoal);
 
  private:
+  bool ReleaseBrake();
+
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> mActionClient;
   move_base_msgs::MoveBaseGoal mMoveBaseGoal;
+  ros::NodeHandle mNodeHandle;
 };
 
 } // namespace AFL

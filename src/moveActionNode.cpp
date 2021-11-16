@@ -58,11 +58,47 @@ BT::NodeStatus MoveActionNode::sendMoveGoal(
 
   this->mActionClient.sendGoal(moveBaseGoal);
 
+  if (!ReleaseBrake())
+    return BT::NodeStatus::FAILURE;
+
   bool success = this->mActionClient.waitForResult(ros::Duration(25));
   if (success)
     return BT::NodeStatus::SUCCESS;
   else
     return BT::NodeStatus::FAILURE;
+}
+
+bool MoveActionNode::ReleaseBrake()
+{
+  auto releaseBrakeClient =
+      this->mNodeHandle.serviceClient<aflctrl_msgs::setReleaseBrake>(
+      "/afl/setReleaseBrake");
+
+  auto autoModeClient =
+      this->mNodeHandle.serviceClient<aflctrl_msgs::setAutoMode>(
+      "/afl/setAutoMode");
+
+  aflctrl_msgs::setReleaseBrake releaseBrakeMessage;
+  aflctrl_msgs::setAutoMode autoModeMessage;
+  autoModeMessage.request.mode = true;
+
+  if (!releaseBrakeClient.call(releaseBrakeMessage))
+  {
+    ROS_ERROR("[afl_behavior_tree] releaseBrakeClient error");
+    return false;
+  }
+
+  if (!autoModeClient.call(autoModeMessage))
+  {
+    ROS_ERROR("[afl_behavior_tree] setAutoModeClient error");
+    return false;
+  }
+
+  ROS_INFO_STREAM("[afl_behavior_tree|ReleaseBrakeNode] result: " <<
+      releaseBrakeMessage.response.result << ", " <<
+      autoModeMessage.response.result);
+
+  return true;
 }
 
 } // namespace AFL
