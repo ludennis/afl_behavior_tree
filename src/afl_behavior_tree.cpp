@@ -13,6 +13,7 @@
 #include <LowerForkActionNode.h>
 #include <ForkTickDescend.h>
 #include <DetectionClient.h>
+#include <SleepNode.h>
 
 using namespace AFL;
 using namespace BT;
@@ -35,6 +36,7 @@ int main(int argc, char** argv)
   factory.registerNodeType<LowerForkActionNode>("LowerForkActionNode");
   factory.registerNodeType<ForkTickDescend>("ForkTickDescend");
   factory.registerNodeType<DetectionClient>("DetectionClient");
+  factory.registerNodeType<SleepNode>("SleepNode");
 
   std::string path;
   ros::param::get("~treeConfigPath", path);
