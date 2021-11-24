@@ -7,20 +7,17 @@ namespace
 {
 
 geometry_msgs::Pose ParseLineToPose(
-    std::string &line, const std::string &delimiter)
+    std::string &line, const char delimiter)
 {
   std::vector<double> parsedResult;
-
-  size_t pos = 0;
+  std::istringstream ss(line);
   std::string token;
-  while ((pos = line.find(delimiter)) != std::string::npos)
+  double d;
+
+  while (std::getline(ss, token, delimiter))
   {
-    token = line.substr(0, pos);
-    ROS_INFO_STREAM("Parsed string: " << token);
-    double d;
     std::stringstream(token) >> d;
     parsedResult.push_back(d);
-    line.erase(0, pos + delimiter.length());
   }
 
   geometry_msgs::Pose pose;
@@ -69,11 +66,13 @@ BT::NodeStatus LoadWaypoints::tick()
 
   if (file.is_open())
   {
+    ROS_INFO("Opened file!");
     while (getline(file, line))
     {
-      mWaypoints.poses.push_back(ParseLineToPose(line, ","));
+      mWaypoints.poses.push_back(ParseLineToPose(line, ','));
     }
 
+    ROS_INFO("Finished parsing");
   }
   else
   {
