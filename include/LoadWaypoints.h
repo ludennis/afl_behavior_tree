@@ -2,6 +2,7 @@
 #define _LOAD_WAYPOINTS_H_
 
 #include <fstream>
+#include <sstream>
 
 #include <ros/ros.h>
 

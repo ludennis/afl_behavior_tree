@@ -6,19 +6,33 @@ namespace AFL
 namespace
 {
 
-std::vector<std::string> ParseLine(
+geometry_msgs::Pose ParseLineToPose(
     std::string &line, const std::string &delimiter)
 {
-  std::vector<std::string> parsedResult;
+  std::vector<double> parsedResult;
 
   size_t pos = 0;
   std::string token;
   while ((pos = line.find(delimiter)) != std::string::npos)
   {
     token = line.substr(0, pos);
-    parsedResult.push_back(token);
+    ROS_INFO_STREAM("Parsed string: " << token);
+    double d;
+    std::stringstream(token) >> d;
+    parsedResult.push_back(d);
     line.erase(0, pos + delimiter.length());
   }
+
+  geometry_msgs::Pose pose;
+  pose.position.x = parsedResult[0];
+  pose.position.y = parsedResult[1];
+  pose.position.z = parsedResult[2];
+  pose.orientation.x = parsedResult[3];
+  pose.orientation.y = parsedResult[4];
+  pose.orientation.z = parsedResult[5];
+  pose.orientation.w = parsedResult[6];
+
+  return pose;
 }
 
 } // namespace
@@ -57,25 +71,9 @@ BT::NodeStatus LoadWaypoints::tick()
   {
     while (getline(file, line))
     {
-      auto parsed = ParseLine(line, ",");
-
-      geometry_msgs::Pose pose;
-      pose.position.x = stod(parsed[0]);
-      pose.position.y = stod(parsed[1]);
-      pose.position.z = stod(parsed[2]);
-      pose.orientation.x = stod(parsed[3]);
-      pose.orientation.y = stod(parsed[4]);
-      pose.orientation.z = stod(parsed[5]);
-      pose.orientation.w = stod(parsed[6]);
-
-      mWaypoints.poses.push_back(pose);
+      mWaypoints.poses.push_back(ParseLineToPose(line, ","));
     }
 
-    file.close();
-
-    setOutput("Waypoints", mWaypoints);
-
-    return BT::NodeStatus::SUCCESS;
   }
   else
   {
@@ -83,6 +81,12 @@ BT::NodeStatus LoadWaypoints::tick()
         "File doesn't exists: ", mWaypointsFilePath);
     return BT::NodeStatus::FAILURE;
   }
+
+  file.close();
+
+  setOutput("Waypoints", mWaypoints);
+
+  return BT::NodeStatus::SUCCESS;
 }
 
 } // namespace AFL
