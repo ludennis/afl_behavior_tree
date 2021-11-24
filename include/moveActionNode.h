@@ -33,6 +33,8 @@ class MoveActionNode : public BT::SyncActionNode
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> mActionClient;
   move_base_msgs::MoveBaseGoal mMoveBaseGoal;
   ros::NodeHandle mNodeHandle;
+
+  int mWaypointsIndex;
 };
 
 } // namespace AFL

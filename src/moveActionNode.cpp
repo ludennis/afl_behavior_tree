@@ -7,6 +7,7 @@ MoveActionNode::MoveActionNode(
     const std::string &name, const BT::NodeConfiguration &config)
 : SyncActionNode(name, config)
 , mActionClient("move_base", true)
+, mWaypointsIndex(0)
 {}
 
 BT::PortsList MoveActionNode::providedPorts()
@@ -44,11 +45,16 @@ BT::NodeStatus MoveActionNode::tick()
   }
   else if (waypoints)
   {
-    for (const auto &pose : waypoints.value().poses)
+    ROS_INFO("[afl_behavior_tree] Following waypoints!");
+
+    while (mWaypointsIndex < waypoints.value().poses.size())
     {
-      mMoveBaseGoal.target_pose.pose = pose;
+      mMoveBaseGoal.target_pose.pose = waypoints.value().poses[mWaypointsIndex];
       mMoveBaseGoal.target_pose.header.frame_id = "map";
-      if (!sendMoveGoal(mMoveBaseGoal))
+
+      if (sendMoveGoal(mMoveBaseGoal))
+        mWaypointsIndex++;
+      else
         return BT::NodeStatus::FAILURE;
     }
 
