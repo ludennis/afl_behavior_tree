@@ -3,6 +3,8 @@
 
 #include <fstream>
 
+#include <ros/ros.h>
+
 #include <behaviortree_cpp_v3/action_node.h>
 
 #include <geometry_msgs/PoseArray.h>
@@ -19,6 +21,8 @@ class LoadWaypoints : public BT::SyncActionNode
 
  private:
   geometry_msgs::PoseArray mWaypoints;
+  ros::NodeHandle mNodeHandle;
+  std::string mWaypointsFilePath;
 };
 
 } // namespace AFL

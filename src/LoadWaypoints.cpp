@@ -26,29 +26,32 @@ std::vector<std::string> ParseLine(
 LoadWaypoints::LoadWaypoints(const std::string &name,
     const BT::NodeConfiguration &config)
 : SyncActionNode(name, config)
+, mNodeHandle("~")
 {}
 
 BT::PortsList LoadWaypoints::providedPorts()
 {
   return {
-      BT::InputPort<std::string>("FilePath"),
       BT::OutputPort<geometry_msgs::PoseArray>("Waypoints"),
   };
 }
 
 BT::NodeStatus LoadWaypoints::tick()
 {
-  auto filePath = getInput<std::string>("FilePath");
+  mNodeHandle.getParam("waypoints_file_path", mWaypointsFilePath);
 
-  if (!filePath)
+  if (mWaypointsFilePath.empty())
   {
     throw BT::RuntimeError(
-        "Missing required input FilePath: ", filePath.error());
+        "Missing ros param waypoints_file_path", mWaypointsFilePath);
     return BT::NodeStatus::FAILURE;
   }
 
+  ROS_INFO_STREAM("[afl_behavior_tree] Loading waypoint file: "
+      << mWaypointsFilePath);
+
   std::string line;
-  std::fstream file(filePath.value(), std::fstream::in);
+  std::fstream file(mWaypointsFilePath, std::fstream::in);
 
   if (file.is_open())
   {
@@ -67,13 +70,19 @@ BT::NodeStatus LoadWaypoints::tick()
 
       mWaypoints.poses.push_back(pose);
     }
+
+    file.close();
+
+    setOutput("Waypoints", mWaypoints);
+
+    return BT::NodeStatus::SUCCESS;
   }
-
-  file.close();
-
-  setOutput("Waypoints", mWaypoints);
-
-  return BT::NodeStatus::SUCCESS;
+  else
+  {
+    throw BT::RuntimeError(
+        "File doesn't exists: ", mWaypointsFilePath);
+    return BT::NodeStatus::FAILURE;
+  }
 }
 
 } // namespace AFL
