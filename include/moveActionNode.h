@@ -14,6 +14,7 @@
 
 #include <aflctrl_msgs/setReleaseBrake.h>
 #include <aflctrl_msgs/setAutoMode.h>
+#include <geometry_msgs/PoseArray.h>
 
 namespace AFL
 {
@@ -24,8 +25,7 @@ class MoveActionNode : public BT::SyncActionNode
   MoveActionNode(const std::string &name, const BT::NodeConfiguration &config);
   static BT::PortsList providedPorts();
   BT::NodeStatus tick() override;
-  BT::NodeStatus sendMoveGoal(
-      const move_base_msgs::MoveBaseGoal &moveBaseGoal);
+  bool sendMoveGoal(const move_base_msgs::MoveBaseGoal &moveBaseGoal);
 
  private:
   bool ReleaseBrake();

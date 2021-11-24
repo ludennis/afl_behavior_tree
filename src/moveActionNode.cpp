@@ -14,6 +14,7 @@ BT::PortsList MoveActionNode::providedPorts()
   return {
       BT::InputPort<tf::StampedTransform>("TargetPose"),
       BT::InputPort<double>("TargetPoseOffset"),
+      BT::InputPort<geometry_msgs::PoseArray>("Waypoints"),
   };
 }
 
@@ -21,31 +22,47 @@ BT::NodeStatus MoveActionNode::tick()
 {
   auto targetPose = getInput<tf::StampedTransform>("TargetPose");
   auto targetPoseOffset = getInput<double>("TargetPoseOffset");
+  auto waypoints = getInput<geometry_msgs::PoseArray>("Waypoints");
 
-  if (!targetPose)
+  if (targetPose)
+  {
+    tf::Matrix3x3 m(targetPose->getRotation());
+
+    mMoveBaseGoal.target_pose.pose.position.x = targetPose->getOrigin().getX() +
+        m[0][0] * targetPoseOffset.value_or(0.0);
+    mMoveBaseGoal.target_pose.pose.position.y = targetPose->getOrigin().getY() +
+        m[1][0] * targetPoseOffset.value_or(0.0);
+    mMoveBaseGoal.target_pose.pose.orientation.z = targetPose->getRotation().getZ();
+    mMoveBaseGoal.target_pose.pose.orientation.w = targetPose->getRotation().getW();
+    mMoveBaseGoal.target_pose.header.frame_id = "map";
+
+    ROS_INFO_STREAM_NAMED("AFL",
+        "[afl_behavior_tree] Sending move base goal: " << mMoveBaseGoal.target_pose);
+
+    return (sendMoveGoal(mMoveBaseGoal)) ?
+        BT::NodeStatus::SUCCESS : BT::NodeStatus::FAILURE;
+  }
+  else if (waypoints)
+  {
+    for (const auto &pose : waypoints.value().poses)
+    {
+      mMoveBaseGoal.target_pose.pose = pose;
+      mMoveBaseGoal.target_pose.header.frame_id = "map";
+      if (!sendMoveGoal(mMoveBaseGoal))
+        return BT::NodeStatus::FAILURE;
+    }
+
+    return BT::NodeStatus::SUCCESS;
+  }
+  else
   {
     throw BT::RuntimeError(
-        "Missing required input TargetPose: ", targetPose.error());
+        "Missing required input TargetPose/Waypoints: ", targetPose.error());
     return BT::NodeStatus::FAILURE;
   }
-
-  tf::Matrix3x3 m(targetPose->getRotation());
-
-  mMoveBaseGoal.target_pose.pose.position.x = targetPose->getOrigin().getX() +
-      m[0][0] * targetPoseOffset.value_or(0.0);
-  mMoveBaseGoal.target_pose.pose.position.y = targetPose->getOrigin().getY() +
-      m[1][0] * targetPoseOffset.value_or(0.0);
-  mMoveBaseGoal.target_pose.pose.orientation.z = targetPose->getRotation().getZ();
-  mMoveBaseGoal.target_pose.pose.orientation.w = targetPose->getRotation().getW();
-  mMoveBaseGoal.target_pose.header.frame_id = "map";
-
-  ROS_INFO_STREAM_NAMED("AFL",
-      "[afl_behavior_tree] Sending move base goal: " << mMoveBaseGoal.target_pose);
-
-  return sendMoveGoal(mMoveBaseGoal);
 }
 
-BT::NodeStatus MoveActionNode::sendMoveGoal(
+bool MoveActionNode::sendMoveGoal(
     const move_base_msgs::MoveBaseGoal &moveBaseGoal)
 {
   ROS_INFO_STREAM_NAMED("AFL","[afl_behavior_tree] " << this->name() <<
@@ -59,13 +76,11 @@ BT::NodeStatus MoveActionNode::sendMoveGoal(
   this->mActionClient.sendGoal(moveBaseGoal);
 
   if (!ReleaseBrake())
-    return BT::NodeStatus::FAILURE;
+    return false;
 
   bool success = this->mActionClient.waitForResult(ros::Duration(25));
-  if (success)
-    return BT::NodeStatus::SUCCESS;
-  else
-    return BT::NodeStatus::FAILURE;
+
+  return success;
 }
 
 bool MoveActionNode::ReleaseBrake()
