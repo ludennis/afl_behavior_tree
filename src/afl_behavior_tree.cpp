@@ -14,6 +14,7 @@
 #include <ForkTickDescend.h>
 #include <DetectionClient.h>
 #include <SleepNode.h>
+#include <LoadWaypoints.h>
 
 using namespace AFL;
 using namespace BT;
@@ -37,6 +38,7 @@ int main(int argc, char** argv)
   factory.registerNodeType<ForkTickDescend>("ForkTickDescend");
   factory.registerNodeType<DetectionClient>("DetectionClient");
   factory.registerNodeType<SleepNode>("SleepNode");
+  factory.registerNodeType<LoadWaypoints>("LoadWaypoints");
 
   std::string path;
   ros::param::get("~treeConfigPath", path);

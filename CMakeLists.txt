@@ -43,6 +43,7 @@ add_executable(${PROJECT_NAME}
   src/ForkTickDescend.cpp
   src/DetectionClient.cpp
   src/SleepNode.cpp
+  src/LoadWaypoints.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
