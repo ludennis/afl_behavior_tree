@@ -44,6 +44,7 @@ add_executable(${PROJECT_NAME}
   src/DetectionClient.cpp
   src/SleepNode.cpp
   src/LoadWaypoints.cpp
+  src/MoveToTargetGlobalPose.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

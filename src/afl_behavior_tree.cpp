@@ -15,6 +15,7 @@
 #include <DetectionClient.h>
 #include <SleepNode.h>
 #include <LoadWaypoints.h>
+#include <MoveToTargetGlobalPose.h>
 
 using namespace AFL;
 using namespace BT;
@@ -39,6 +40,7 @@ int main(int argc, char** argv)
   factory.registerNodeType<DetectionClient>("DetectionClient");
   factory.registerNodeType<SleepNode>("SleepNode");
   factory.registerNodeType<LoadWaypoints>("LoadWaypoints");
+  factory.registerNodeType<MoveToTargetGlobalPose>("MoveToTargetGlobalPose");
 
   std::string path;
   ros::param::get("~treeConfigPath", path);
