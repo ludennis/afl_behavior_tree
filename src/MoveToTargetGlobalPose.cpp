@@ -6,7 +6,7 @@ namespace AFL
 MoveToTargetGlobalPose::MoveToTargetGlobalPose(
     const std::string &name, const BT::NodeConfiguration &config)
 : SyncActionNode(name, config)
-, mActionClient("move_base_flex", true)
+, mActionClient("move_base_flex/move_base", true)
 {}
 
 BT::PortsList MoveToTargetGlobalPose::providedPorts()
