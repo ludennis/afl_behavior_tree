@@ -30,18 +30,26 @@ BT::NodeStatus DetectionClient::tick()
       operation.value() == "ENABLE")
   {
     auto client = mNodeHandle.serviceClient<afl_detection::ActivateDetection>(
-        "activateDetection");
+        "activate_detection");
     afl_detection::ActivateDetection msg;
     if (!client.call(msg))
+    {
+      ROS_ERROR("[afl_behavior_tree] Failed to enable detection");
       return BT::NodeStatus::FAILURE;
+    }
+    ROS_INFO("[afl_behavior_tree] Enabled Detection");
   }
   else
   {
     auto client = mNodeHandle.serviceClient<afl_detection::DeactivateDetection>(
-        "deactivateDetection");
+        "deactivate_detection");
     afl_detection::DeactivateDetection msg;
     if (!client.call(msg))
+    {
+      ROS_ERROR("[afl_behavior_tree] Failed to disable detection");
       return BT::NodeStatus::FAILURE;
+    }
+    ROS_INFO("[afl_behavior_tree] Disabled Detection");
   }
 
   return BT::NodeStatus::SUCCESS;
