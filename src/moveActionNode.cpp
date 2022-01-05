@@ -6,7 +6,7 @@ namespace AFL
 MoveActionNode::MoveActionNode(
     const std::string &name, const BT::NodeConfiguration &config)
 : SyncActionNode(name, config)
-, mActionClient("move_base", true)
+, mActionClient("move_base_flex/move_base", true)
 , mWaypointsIndex(0)
 {}
 
@@ -16,6 +16,8 @@ BT::PortsList MoveActionNode::providedPorts()
       BT::InputPort<tf::StampedTransform>("TargetPose"),
       BT::InputPort<double>("TargetPoseOffset"),
       BT::InputPort<geometry_msgs::PoseArray>("Waypoints"),
+      BT::InputPort<std::string>("Controller"),
+      BT::InputPort<std::string>("Planner"),
   };
 }
 
@@ -24,23 +26,30 @@ BT::NodeStatus MoveActionNode::tick()
   auto targetPose = getInput<tf::StampedTransform>("TargetPose");
   auto targetPoseOffset = getInput<double>("TargetPoseOffset");
   auto waypoints = getInput<geometry_msgs::PoseArray>("Waypoints");
+  auto controller = getInput<std::string>("Controller");
+  auto planner = getInput<std::string>("Planner");
 
   if (targetPose)
   {
     tf::Matrix3x3 m(targetPose->getRotation());
 
-    mMoveBaseGoal.target_pose.pose.position.x = targetPose->getOrigin().getX() +
+    mMoveBaseFlexGoal.target_pose.pose.position.x = targetPose->getOrigin().getX() +
         m[0][0] * targetPoseOffset.value_or(0.0);
-    mMoveBaseGoal.target_pose.pose.position.y = targetPose->getOrigin().getY() +
+    mMoveBaseFlexGoal.target_pose.pose.position.y = targetPose->getOrigin().getY() +
         m[1][0] * targetPoseOffset.value_or(0.0);
-    mMoveBaseGoal.target_pose.pose.orientation.z = targetPose->getRotation().getZ();
-    mMoveBaseGoal.target_pose.pose.orientation.w = targetPose->getRotation().getW();
-    mMoveBaseGoal.target_pose.header.frame_id = "map";
+    mMoveBaseFlexGoal.target_pose.pose.orientation.z = targetPose->getRotation().getZ();
+    mMoveBaseFlexGoal.target_pose.pose.orientation.w = targetPose->getRotation().getW();
+    mMoveBaseFlexGoal.target_pose.header.frame_id = "map";
+    mMoveBaseFlexGoal.controller = controller.value_or("");
+    mMoveBaseFlexGoal.planner = planner.value_or("");
 
     ROS_INFO_STREAM_NAMED("AFL",
-        "[afl_behavior_tree] Sending move base goal: " << mMoveBaseGoal.target_pose);
+        "[afl_behavior_tree] Sending move base flex goal: " << mMoveBaseFlexGoal.target_pose);
+    ROS_INFO_STREAM_NAMED("AFL",
+        "[afl_behavior_tree] Move base flex using controller: " << mMoveBaseFlexGoal.controller <<
+        " and planner: " << mMoveBaseFlexGoal.planner);
 
-    return (sendMoveGoal(mMoveBaseGoal)) ?
+    return (sendMoveGoal(mMoveBaseFlexGoal)) ?
         BT::NodeStatus::SUCCESS : BT::NodeStatus::FAILURE;
   }
   else if (waypoints)
@@ -49,10 +58,12 @@ BT::NodeStatus MoveActionNode::tick()
 
     while (mWaypointsIndex < waypoints.value().poses.size())
     {
-      mMoveBaseGoal.target_pose.pose = waypoints.value().poses[mWaypointsIndex];
-      mMoveBaseGoal.target_pose.header.frame_id = "map";
+      mMoveBaseFlexGoal.target_pose.pose = waypoints.value().poses[mWaypointsIndex];
+      mMoveBaseFlexGoal.target_pose.header.frame_id = "map";
+      mMoveBaseFlexGoal.controller = controller.value_or("");
+      mMoveBaseFlexGoal.planner = planner.value_or("");
 
-      if (sendMoveGoal(mMoveBaseGoal))
+      if (sendMoveGoal(mMoveBaseFlexGoal))
         mWaypointsIndex++;
       else
         return BT::NodeStatus::FAILURE;
@@ -69,7 +80,7 @@ BT::NodeStatus MoveActionNode::tick()
 }
 
 bool MoveActionNode::sendMoveGoal(
-    const move_base_msgs::MoveBaseGoal &moveBaseGoal)
+    const mbf_msgs::MoveBaseGoal &goal)
 {
   ROS_INFO_STREAM_NAMED("AFL","[afl_behavior_tree] " << this->name() <<
       ": waiting for move base action server to start.");
@@ -79,12 +90,12 @@ bool MoveActionNode::sendMoveGoal(
   ROS_INFO_STREAM_NAMED("AFL", "[afl_behavior_tree] " << this->name() <<
       ": move base action server started, sending goal.");
 
-  this->mActionClient.sendGoal(moveBaseGoal);
+  this->mActionClient.sendGoal(goal);
 
   if (!ReleaseBrake())
     return false;
 
-  bool success = this->mActionClient.waitForResult(ros::Duration(25));
+  bool success = this->mActionClient.waitForResult();
 
   return success;
 }
