@@ -16,6 +16,7 @@
 #include <SleepNode.h>
 #include <LoadWaypoints.h>
 #include <MoveToTargetGlobalPose.h>
+#include <WaitForAprilTagDetection.h>
 
 using namespace AFL;
 using namespace BT;
@@ -41,6 +42,7 @@ int main(int argc, char** argv)
   factory.registerNodeType<SleepNode>("SleepNode");
   factory.registerNodeType<LoadWaypoints>("LoadWaypoints");
   factory.registerNodeType<MoveToTargetGlobalPose>("MoveToTargetGlobalPose");
+  factory.registerNodeType<WaitForAprilTagDetection>("WaitForAprilTagDetection");
 
   std::string path;
   ros::param::get("~treeConfigPath", path);
