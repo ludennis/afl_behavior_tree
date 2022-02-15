@@ -36,15 +36,7 @@ BT::NodeStatus WaitForAprilTagDetection::tick()
         << "            in RPY (degree) [" <<  roll*180.0/M_PI << ", " << pitch*180.0/M_PI
         << ", " << yaw*180.0/M_PI << "]" << std::endl;
 
-    geometry_msgs::PoseStamped aprilTagPose;
-    aprilTagPose.header.frame_id = mMapTfName.value();
-    aprilTagPose.pose.position.x = v.getX();
-    aprilTagPose.pose.position.y = v.getY();
-    aprilTagPose.pose.position.z = v.getZ();
-    aprilTagPose.pose.orientation.z = q.getZ();
-    aprilTagPose.pose.orientation.w = 1.0;
-
-    setOutput("AprilTagPose", aprilTagPose);
+    setOutput("AprilTagPose", stampedTransform);
   }
   catch (tf::TransformException &ex)
   {
@@ -60,7 +52,7 @@ BT::PortsList WaitForAprilTagDetection::providedPorts()
   return {
     BT::InputPort<std::string>("AprilTagTfName"),
     BT::InputPort<std::string>("MapTfName"),
-    BT::OutputPort<geometry_msgs::PoseStamped>("AprilTagPose")
+    BT::OutputPort<tf::StampedTransform>("AprilTagPose")
   };
 }
 
