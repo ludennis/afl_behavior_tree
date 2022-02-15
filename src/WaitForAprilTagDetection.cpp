@@ -23,7 +23,13 @@ BT::NodeStatus WaitForAprilTagDetection::tick()
     tfListener.lookupTransform(mMapTfName.value(), mAprilTagTfName.value(),
         ros::Time(), stampedTransform);
 
-    double yaw, pitch, roll;
+    double roll, pitch, yaw = -M_PI / 2;
+    tf::Quaternion rotation;
+    rotation.setRPY(roll, pitch, yaw);
+    rotation = rotation.normalize();
+    stampedTransform.setRotation(
+        (rotation * stampedTransform.getRotation()).normalize());
+
     stampedTransform.getBasis().getRPY(roll, pitch, yaw);
     tf::Quaternion q = stampedTransform.getRotation();
     tf::Vector3 v = stampedTransform.getOrigin();
@@ -43,7 +49,7 @@ BT::NodeStatus WaitForAprilTagDetection::tick()
     ROS_WARN("%s", ex.what());
   }
 
-  setOutput("PalletPose", stampedTransform);
+  setOutput("AprilTagPose", stampedTransform);
   return BT::NodeStatus::SUCCESS;
 }
 

@@ -13,6 +13,8 @@ BT::PortsList ForkActionNode::providedPorts()
 {
   return {
       BT::InputPort<tf::StampedTransform>("PalletPose"),
+      BT::InputPort<tf::StampedTransform>("DropoffPose"),
+      BT::InputPort<double>("Offset"),
       BT::InputPort<double>("TargetHeight"),
       BT::InputPort<double>("PalletThickness"),
       BT::InputPort<double>("PalletBottomPadding"),
@@ -27,14 +29,16 @@ BT::NodeStatus ForkActionNode::tick()
   auto palletThickness = getInput<double>("PalletThickness");
   auto palletBottomPadding = getInput<double>("PalletBottomPadding");
   auto palletPose = getInput<tf::StampedTransform>("PalletPose");
+  auto dropoffPose = getInput<tf::StampedTransform>("DropoffPose");
+  auto offset = getInput<double>("Offset");
   auto targetHeight = getInput<double>("TargetHeight");
   auto targetHeightOffset = getInput<double>("TargetHeightOffset");
   auto ascendingOvershootOffset = getInput<double>("AscendingOvershootOffset");
 
-  if (!palletPose && !targetHeight && !targetHeightOffset)
+  if (!palletPose && !targetHeight && !targetHeightOffset && !dropoffPose)
   {
     throw BT::RuntimeError(
-        "Missing required input PalletPose/TargetHeight/TargetHeightOffset: ",
+        "Missing required input PalletPose/TargetHeight/TargetHeightOffset/DropoffPose: ",
         palletPose.error());
     return BT::NodeStatus::FAILURE;
   }
@@ -44,6 +48,11 @@ BT::NodeStatus ForkActionNode::tick()
   {
     forkHeightGoal.targetHeight = (abs(palletPose.value().getOrigin().getZ()
         - palletThickness.value() / 2 + palletBottomPadding.value())) * 1e3;
+  }
+  else if (dropoffPose)
+  {
+    forkHeightGoal.targetHeight =
+        (dropoffPose.value().getOrigin().getZ() + offset.value_or(0.0)) * 1e3;
   }
   else if (targetHeight)
   {

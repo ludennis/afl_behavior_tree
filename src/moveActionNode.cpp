@@ -37,6 +37,8 @@ BT::NodeStatus MoveActionNode::tick()
         m[0][0] * targetPoseOffset.value_or(0.0);
     mMoveBaseFlexGoal.target_pose.pose.position.y = targetPose->getOrigin().getY() +
         m[1][0] * targetPoseOffset.value_or(0.0);
+    mMoveBaseFlexGoal.target_pose.pose.orientation.x = targetPose->getRotation().getX();
+    mMoveBaseFlexGoal.target_pose.pose.orientation.y = targetPose->getRotation().getY();
     mMoveBaseFlexGoal.target_pose.pose.orientation.z = targetPose->getRotation().getZ();
     mMoveBaseFlexGoal.target_pose.pose.orientation.w = targetPose->getRotation().getW();
     mMoveBaseFlexGoal.target_pose.header.frame_id = "map";
