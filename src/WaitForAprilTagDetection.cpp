@@ -18,6 +18,8 @@ BT::NodeStatus WaitForAprilTagDetection::tick()
   tfListener.waitForTransform(mMapTfName.value(), mAprilTagTfName.value(),
       ros::Time(), ros::Duration(120.0));
 
+  auto offset = getInput<double>("Offset");
+
   try
   {
     tfListener.lookupTransform(mMapTfName.value(), mAprilTagTfName.value(),
@@ -29,6 +31,11 @@ BT::NodeStatus WaitForAprilTagDetection::tick()
     rotation = rotation.normalize();
     stampedTransform.setRotation(
         (rotation * stampedTransform.getRotation()).normalize());
+    tf::Vector3 translation{stampedTransform.getOrigin().getX(),
+        stampedTransform.getOrigin().getY(),
+        stampedTransform.getOrigin().getZ() + offset.value_or(0)};
+    stampedTransform.setOrigin(translation);
+
 
     stampedTransform.getBasis().getRPY(roll, pitch, yaw);
     tf::Quaternion q = stampedTransform.getRotation();
@@ -58,6 +65,7 @@ BT::PortsList WaitForAprilTagDetection::providedPorts()
   return {
     BT::InputPort<std::string>("AprilTagTfName"),
     BT::InputPort<std::string>("MapTfName"),
+    BT::InputPort<double>("Offset"),
     BT::OutputPort<tf::StampedTransform>("AprilTagPose")
   };
 }
